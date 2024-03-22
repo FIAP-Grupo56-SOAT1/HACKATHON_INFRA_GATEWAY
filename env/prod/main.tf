@@ -23,7 +23,7 @@ provider "aws" {
 # Criando um modulo que utiliza os dados do infra para criação do ambiente
 module "prod" {
   source                = "../../"
-  url_timesheet_service    = jsondecode(data.aws_secretsmanager_secret_version.credentials_producao.secret_string)["url_timesheet_service"]
+  url_timesheet_service    = jsondecode(data.aws_secretsmanager_secret_version.credentials_timesheet.secret_string)["url_timesheet_service"]
 }
 
 

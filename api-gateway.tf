@@ -1,7 +1,6 @@
 resource "aws_default_vpc" "default_vpc" {
 }
 
-
 # Provide references to your default subnets
 resource "aws_default_subnet" "default_subnet_a" {
   # Use your own region here but reference to subnet 1a
@@ -29,8 +28,6 @@ data "template_file" "api_gateway" {
   template = file("../../api-gateway-timesheet.yaml")
 
   vars = {
-    lambda_authorizer_arn       = var.lambda_authorizer_arn
-    lambda_sts_arn                  = var.lambda_sts_arn
     aws_region                        = var.AWS_REGION
     url_timesheet_service             = var.url_timesheet_service
     authorizer_credentials      = var.execution_role_ecs

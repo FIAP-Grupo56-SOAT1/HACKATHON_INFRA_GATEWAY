@@ -1698,9 +1698,7 @@ paths:
         type: "http"
 components:
   schemas:
-    Empty:
-      title: "Empty Schema"
-      type: "object"
+
   securitySchemes:
     lambda-authorizer:
       type: "apiKey"
