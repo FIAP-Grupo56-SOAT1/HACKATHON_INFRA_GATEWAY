@@ -181,6 +181,46 @@ paths:
         passthroughBehavior: "when_no_match"
         type: "http"
 
+  /point-records/employees/{employeeId}/record-point/{type}:
+    post:
+      tags:
+        - Registro de Ponto
+      summary: Registrar ponto
+      description: Registra o ponto do funcionário
+      operationId: recordPoint
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - IN
+              - OUT
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PointRecordResponse'
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "${url_timesheet_service}/point-records/employees/{employeeId}/record-point/{type}"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.path.employeeId: "method.request.path.employeeId"
+          integration.request.path.type: "method.request.path.type"
+        passthroughBehavior: "when_no_match"
+        type: "http"
 
 components:
   schemas:
