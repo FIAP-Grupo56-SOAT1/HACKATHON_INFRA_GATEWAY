@@ -1,7 +1,6 @@
 resource "aws_default_vpc" "default_vpc" {
 }
 
-
 # Provide references to your default subnets
 resource "aws_default_subnet" "default_subnet_a" {
   # Use your own region here but reference to subnet 1a
@@ -15,8 +14,8 @@ resource "aws_default_subnet" "default_subnet_b" {
 
 
 resource "aws_api_gateway_rest_api" "apigateway" {
-  name        = "fasteats"
-  description = "API Gateway para projeto feasteats"
+  name        = "timesheet"
+  description = "API Gateway para projeto timesheet"
   body        = data.template_file.api_gateway.rendered
 
   endpoint_configuration {
@@ -26,15 +25,11 @@ resource "aws_api_gateway_rest_api" "apigateway" {
 }
 
 data "template_file" "api_gateway" {
-  template = file("../../api-gateway-fasteats.yaml")
+  template = file("../../api-gateway-timesheet.yaml")
 
   vars = {
-    lambda_authorizer_arn       = var.lambda_authorizer_arn
-    lambda_sts_arn                  = var.lambda_sts_arn
     aws_region                        = var.AWS_REGION
-    url_pedido_service             = var.url_pedido_service
-    url_pagamento_service      = var.url_pagamento_service
-    url_cozinha_service           = var.url_cozinha_service
+    url_timesheet_service             = var.url_timesheet_service
     authorizer_credentials      = var.execution_role_ecs
   }
 
@@ -65,22 +60,6 @@ resource "aws_api_gateway_stage" "stage" {
     format          = "$context.identity.sourceIp $context.identity.caller $context.identity.user [$context.requestTime] \"$context.httpMethod $context.resourcePath $context.protocol\" $context.status $context.responseLength $context.requestId"
 
   }
-}
-
-resource "aws_lambda_permission" "apigw_sts" {
-  statement_id  = "AllowAPIGatewayInvoke"
-  action        = "lambda:InvokeFunction"
-  function_name = var.lambda_sts_arn
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${replace(aws_api_gateway_deployment.deployment.execution_arn, var.stage_prod, "")}*/*"
-}
-
-resource "aws_lambda_permission" "apigw_authorizer" {
-  statement_id  = "AllowAPIGatewayInvoke"
-  action        = "lambda:InvokeFunction"
-  function_name = var.lambda_authorizer_arn
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${replace(aws_api_gateway_deployment.deployment.execution_arn, var.stage_prod, "")}*/*"
 }
 
 

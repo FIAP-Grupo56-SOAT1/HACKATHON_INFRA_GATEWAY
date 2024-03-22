@@ -4,10 +4,10 @@ info:
   description: "API Gateway para projeto feasteats"
   version: "v.1.0.0"
 servers:
-- url: "https://mn71pc2qi7.execute-api.us-east-1.amazonaws.com/{basePath}"
-  variables:
-    basePath:
-      default: "prod"
+  - url: "https://mn71pc2qi7.execute-api.us-east-1.amazonaws.com/{basePath}"
+    variables:
+      basePath:
+        default: "prod"
 paths:
   /status-pedidos:
     get:
@@ -19,10 +19,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/status-pedidos"
+        uri: "${url_pedido_service}/status-pedidos"
         responses:
           default:
             statusCode: "200"
@@ -37,10 +37,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/status-pedidos"
+        uri: "${url_pedido_service}/status-pedidos"
         responses:
           default:
             statusCode: "200"
@@ -67,11 +67,11 @@ paths:
   /producao-pedido/{idPedido}/finalizar-preparo:
     patch:
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -80,10 +80,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-cozinha-1458632615.us-east-1.elb.amazonaws.com/producao-pedido/{idPedido}/finalizar-preparo"
+        uri: "${url_cozinha_service}/producao-pedido/{idPedido}/finalizar-preparo"
         responses:
           default:
             statusCode: "200"
@@ -94,16 +94,16 @@ paths:
   /pagamentos/{id}/alterar-forma-pagamento:
     put:
       parameters:
-      - name: "idFormaPagamento"
-        in: "query"
-        required: true
-        schema:
-          type: "string"
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idFormaPagamento"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -112,10 +112,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PUT"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamentos/{id}/alterar-forma-pagamento"
+        uri: "${url_pagamento_service}/pagamentos/{id}/alterar-forma-pagamento"
         responses:
           default:
             statusCode: "200"
@@ -126,11 +126,11 @@ paths:
   /pagamentos/{id}/reprocessar-pagamento:
     post:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -139,10 +139,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamentos/{id}/reprocessar-pagamento"
+        uri: "${url_pagamento_service}/pagamentos/{id}/reprocessar-pagamento"
         responses:
           default:
             statusCode: "200"
@@ -160,10 +160,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/solicitacao-usuario/desativar-usuario"
+        uri: "${url_pedido_service}/solicitacao-usuario/desativar-usuario"
         responses:
           default:
             statusCode: "200"
@@ -179,10 +179,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/categorias"
+        uri: "${url_pedido_service}/categorias"
         responses:
           default:
             statusCode: "200"
@@ -197,10 +197,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/categorias"
+        uri: "${url_pedido_service}/categorias"
         responses:
           default:
             statusCode: "200"
@@ -209,11 +209,11 @@ paths:
   /clientes/pesquisar-id/{id}:
     get:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -222,10 +222,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/clientes/pesquisar-id/{id}"
+        uri: "${url_pedido_service}/clientes/pesquisar-id/{id}"
         responses:
           default:
             statusCode: "200"
@@ -236,11 +236,11 @@ paths:
   /pagamentos/{id}/consultar-pagamento-por-id-pedido:
     get:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -249,10 +249,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamentos/{id}/consultar-pagamento-por-id-pedido"
+        uri: "${url_pagamento_service}/pagamentos/{id}/consultar-pagamento-por-id-pedido"
         responses:
           default:
             statusCode: "200"
@@ -263,11 +263,11 @@ paths:
   /pagamentos/{id}/cancelar-pagamento:
     post:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -276,10 +276,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamentos/{id}/cancelar-pagamento"
+        uri: "${url_pagamento_service}/pagamentos/{id}/cancelar-pagamento"
         responses:
           default:
             statusCode: "200"
@@ -290,11 +290,11 @@ paths:
   /producao-pedido/{idPedido}/iniciar-preparo:
     patch:
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -303,10 +303,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-cozinha-1458632615.us-east-1.elb.amazonaws.com/producao-pedido/{idPedido}/iniciar-preparo"
+        uri: "${url_cozinha_service}/producao-pedido/{idPedido}/iniciar-preparo"
         responses:
           default:
             statusCode: "200"
@@ -317,11 +317,11 @@ paths:
   /gerenciar/pedidos/{id}:
     get:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -330,10 +330,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/gerenciar/pedidos/{id}"
+        uri: "${url_pedido_service}/gerenciar/pedidos/{id}"
         responses:
           default:
             statusCode: "200"
@@ -344,11 +344,11 @@ paths:
   /produto-pedido/{idPedido}/produtos:
     post:
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -357,10 +357,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/produto-pedido/{idPedido}/produtos"
+        uri: "${url_pedido_service}/produto-pedido/{idPedido}/produtos"
         responses:
           default:
             statusCode: "200"
@@ -371,11 +371,11 @@ paths:
   /pagamentos/{id}/realizar-pagamento:
     post:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -384,10 +384,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamentos/{id}/realizar-pagamento"
+        uri: "${url_pagamento_service}/pagamentos/{id}/realizar-pagamento"
         responses:
           default:
             statusCode: "200"
@@ -399,11 +399,11 @@ paths:
     get:
       operationId: "get/cozinha-pedido/{cozinhaId}"
       parameters:
-      - name: "cozinhaId"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "cozinhaId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -412,10 +412,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-cozinha-1458632615.us-east-1.elb.amazonaws.com/cozinha-pedido/{cozinhaId}"
+        uri: "${url_cozinha_service}/cozinha-pedido/{cozinhaId}"
         responses:
           default:
             statusCode: "200"
@@ -426,11 +426,11 @@ paths:
   /pedidos/{idPedido}:
     get:
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -439,10 +439,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/pedidos/{idPedido}"
+        uri: "${url_pedido_service}/pedidos/{idPedido}"
         responses:
           default:
             statusCode: "200"
@@ -452,11 +452,11 @@ paths:
         type: "http"
     delete:
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -465,10 +465,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "DELETE"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/pedidos/{idPedido}"
+        uri: "${url_pedido_service}/pedidos/{idPedido}"
         responses:
           default:
             statusCode: "200"
@@ -478,11 +478,11 @@ paths:
         type: "http"
     patch:
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -491,10 +491,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/pedidos/{idPedido}"
+        uri: "${url_pedido_service}/pedidos/{idPedido}"
         responses:
           default:
             statusCode: "200"
@@ -506,16 +506,16 @@ paths:
     post:
       operationId: "webhookPagamentoSimulacao"
       parameters:
-      - name: "idPagamentoExterno"
-        in: "query"
-        required: true
-        schema:
-          type: "string"
-      - name: "statusMercadoPago"
-        in: "query"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPagamentoExterno"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "statusMercadoPago"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -524,10 +524,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamento-externo/mercadopago-webhook-simulacao"
+        uri: "${url_pagamento_service}/pagamento-externo/mercadopago-webhook-simulacao"
         responses:
           default:
             statusCode: "200"
@@ -546,10 +546,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamentos"
+        uri: "${url_pagamento_service}/pagamentos"
         responses:
           default:
             statusCode: "200"
@@ -558,11 +558,11 @@ paths:
   /pagamentos/{id}:
     get:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -571,10 +571,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamentos/{id}"
+        uri: "${url_pagamento_service}/pagamentos/{id}"
         responses:
           default:
             statusCode: "200"
@@ -585,11 +585,11 @@ paths:
   /pagamentos/{id}/enviar-pedido-pago-cozinha:
     post:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -598,10 +598,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamentos/{id}/enviar-pedido-pago-cozinha"
+        uri: "${url_pagamento_service}/pagamentos/{id}/enviar-pedido-pago-cozinha"
         responses:
           default:
             statusCode: "200"
@@ -612,11 +612,11 @@ paths:
   /produtos/{id}:
     get:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -625,10 +625,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/produtos/{id}"
+        uri: "${url_pedido_service}/produtos/{id}"
         responses:
           default:
             statusCode: "200"
@@ -638,16 +638,16 @@ paths:
         type: "http"
     delete:
       parameters:
-      - name: "Authorization"
-        in: "header"
-        required: true
-        schema:
-          type: "string"
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -660,10 +660,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "DELETE"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/produtos/{id}"
+        uri: "${url_pedido_service}/produtos/{id}"
         responses:
           default:
             statusCode: "200"
@@ -675,11 +675,11 @@ paths:
         type: "http"
     patch:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -688,10 +688,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/produtos/{id}"
+        uri: "${url_pedido_service}/produtos/{id}"
         responses:
           default:
             statusCode: "200"
@@ -709,10 +709,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/clientes"
+        uri: "${url_pedido_service}/clientes"
         responses:
           default:
             statusCode: "200"
@@ -727,10 +727,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/clientes"
+        uri: "${url_pedido_service}/clientes"
         responses:
           default:
             statusCode: "200"
@@ -739,11 +739,11 @@ paths:
   /pagamentos/{id}/consultar-por-id-pagamento-externo:
     get:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -752,10 +752,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamentos/{id}/consultar-por-id-pagamento-externo"
+        uri: "${url_pagamento_service}/pagamentos/{id}/consultar-por-id-pagamento-externo"
         responses:
           default:
             statusCode: "200"
@@ -766,11 +766,11 @@ paths:
   /pagamento-externo/mercadopago/{idPagamentoExterno}/cancelar:
     post:
       parameters:
-      - name: "idPagamentoExterno"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPagamentoExterno"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -779,10 +779,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamento-externo/mercadopago/{idPagamentoExterno}/cancelar"
+        uri: "${url_pagamento_service}/pagamento-externo/mercadopago/{idPagamentoExterno}/cancelar"
         responses:
           default:
             statusCode: "200"
@@ -793,11 +793,11 @@ paths:
   /status-pagamentos/{id}:
     get:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -806,10 +806,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/status-pagamentos/{id}"
+        uri: "${url_pagamento_service}/status-pagamentos/{id}"
         responses:
           default:
             statusCode: "200"
@@ -825,10 +825,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/forma-pagamento"
+        uri: "${url_pagamento_service}/forma-pagamento"
         responses:
           default:
             statusCode: "200"
@@ -843,10 +843,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/forma-pagamento"
+        uri: "${url_pagamento_service}/forma-pagamento"
         responses:
           default:
             statusCode: "200"
@@ -855,11 +855,11 @@ paths:
   /pedidos:
     get:
       parameters:
-      - name: "Authorization"
-        in: "header"
-        required: true
-        schema:
-          type: "string"
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -868,10 +868,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/pedidos"
+        uri: "${url_pedido_service}/pedidos"
         responses:
           default:
             statusCode: "200"
@@ -881,11 +881,11 @@ paths:
         type: "http"
     post:
       parameters:
-      - name: "Authorization"
-        in: "header"
-        required: true
-        schema:
-          type: "string"
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -894,10 +894,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/pedidos"
+        uri: "${url_pedido_service}/pedidos"
         responses:
           default:
             statusCode: "200"
@@ -915,10 +915,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-cozinha-1458632615.us-east-1.elb.amazonaws.com/cozinha-pedido"
+        uri: "${url_cozinha_service}/cozinha-pedido"
         responses:
           default:
             statusCode: "200"
@@ -934,10 +934,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/status-pagamentos"
+        uri: "${url_pagamento_service}/status-pagamentos"
         responses:
           default:
             statusCode: "200"
@@ -946,16 +946,16 @@ paths:
   /pedidos/{idPedido}/confirmar:
     patch:
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      - name: "tipoPagamentoId"
-        in: "query"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "tipoPagamentoId"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -964,10 +964,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/pedidos/{idPedido}/confirmar"
+        uri: "${url_pedido_service}/pedidos/{idPedido}/confirmar"
         responses:
           default:
             statusCode: "200"
@@ -979,11 +979,11 @@ paths:
   /producao-pedido/{idPedido}/retirar:
     patch:
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -992,10 +992,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-cozinha-1458632615.us-east-1.elb.amazonaws.com/producao-pedido/{idPedido}/retirar"
+        uri: "${url_cozinha_service}/producao-pedido/{idPedido}/retirar"
         responses:
           default:
             statusCode: "200"
@@ -1006,11 +1006,11 @@ paths:
   /forma-pagamento/consultar-por-nome/{nome}:
     get:
       parameters:
-      - name: "nome"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "nome"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1019,10 +1019,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/forma-pagamento/consultar-por-nome/{nome}"
+        uri: "${url_pagamento_service}/forma-pagamento/consultar-por-nome/{nome}"
         responses:
           default:
             statusCode: "200"
@@ -1033,11 +1033,11 @@ paths:
   /categorias/consultar-por-nome/{nome}:
     get:
       parameters:
-      - name: "nome"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "nome"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1046,10 +1046,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/categorias/consultar-por-nome/{nome}"
+        uri: "${url_pedido_service}/categorias/consultar-por-nome/{nome}"
         responses:
           default:
             statusCode: "200"
@@ -1060,11 +1060,11 @@ paths:
   /produtos/consultar-por-categoria/{categoriaId}:
     get:
       parameters:
-      - name: "categoriaId"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "categoriaId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1073,10 +1073,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/produtos/consultar-por-categoria/{categoriaId}"
+        uri: "${url_pedido_service}/produtos/consultar-por-categoria/{categoriaId}"
         responses:
           default:
             statusCode: "200"
@@ -1087,16 +1087,16 @@ paths:
   /produto-pedido/{idPedido}/produtos/{idProduto}:
     delete:
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      - name: "idProduto"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "idProduto"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1105,10 +1105,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "DELETE"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/produto-pedido/{idPedido}/produtos/{idProduto}"
+        uri: "${url_pedido_service}/produto-pedido/{idPedido}/produtos/{idProduto}"
         responses:
           default:
             statusCode: "200"
@@ -1119,16 +1119,16 @@ paths:
         type: "http"
     patch:
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      - name: "idProduto"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "idProduto"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1137,10 +1137,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/produto-pedido/{idPedido}/produtos/{idProduto}"
+        uri: "${url_pedido_service}/produto-pedido/{idPedido}/produtos/{idProduto}"
         responses:
           default:
             statusCode: "200"
@@ -1153,11 +1153,11 @@ paths:
     get:
       operationId: "get/cozinha-pedido/pedido/{idPedido}"
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1166,10 +1166,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-cozinha-1458632615.us-east-1.elb.amazonaws.com/cozinha-pedido/pedido/{idPedido}"
+        uri: "${url_cozinha_service}/cozinha-pedido/pedido/{idPedido}"
         responses:
           default:
             statusCode: "200"
@@ -1180,11 +1180,11 @@ paths:
   /status-pagamentos/consultar-por-nome/{nome}:
     get:
       parameters:
-      - name: "nome"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "nome"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1193,10 +1193,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/status-pagamentos/consultar-por-nome/{nome}"
+        uri: "${url_pagamento_service}/status-pagamentos/consultar-por-nome/{nome}"
         responses:
           default:
             statusCode: "200"
@@ -1205,11 +1205,11 @@ paths:
   /produtos/consultar-por-nome/{nome}:
     get:
       parameters:
-      - name: "nome"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "nome"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1218,10 +1218,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/produtos/consultar-por-nome/{nome}"
+        uri: "${url_pedido_service}/produtos/consultar-por-nome/{nome}"
         responses:
           default:
             statusCode: "200"
@@ -1239,10 +1239,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/solicitacao-usuario/excluir-usuario"
+        uri: "${url_pedido_service}/solicitacao-usuario/excluir-usuario"
         responses:
           default:
             statusCode: "200"
@@ -1258,10 +1258,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/pagamento-externo/mercadopago-webhook"
+        uri: "${url_pagamento_service}/pagamento-externo/mercadopago-webhook"
         responses:
           default:
             statusCode: "200"
@@ -1277,10 +1277,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/produtos"
+        uri: "${url_pedido_service}/produtos"
         responses:
           default:
             statusCode: "200"
@@ -1295,10 +1295,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/produtos"
+        uri: "${url_pedido_service}/produtos"
         responses:
           default:
             statusCode: "200"
@@ -1307,11 +1307,11 @@ paths:
   /status-pedidos/consultar-por-nome/{nome}:
     get:
       parameters:
-      - name: "nome"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "nome"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1320,10 +1320,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/status-pedidos/consultar-por-nome/{nome}"
+        uri: "${url_pedido_service}/status-pedidos/consultar-por-nome/{nome}"
         responses:
           default:
             statusCode: "200"
@@ -1335,11 +1335,11 @@ paths:
     get:
       operationId: "get/status-pedidos/{id}"
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1348,10 +1348,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/status-pedidos/{id}"
+        uri: "${url_pedido_service}/status-pedidos/{id}"
         responses:
           default:
             statusCode: "200"
@@ -1361,11 +1361,11 @@ paths:
         type: "http"
     delete:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1374,10 +1374,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "DELETE"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/status-pedidos/{id}"
+        uri: "${url_pedido_service}/status-pedidos/{id}"
         responses:
           default:
             statusCode: "200"
@@ -1387,11 +1387,11 @@ paths:
         type: "http"
     patch:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1400,10 +1400,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/status-pedidos/{id}"
+        uri: "${url_pedido_service}/status-pedidos/{id}"
         responses:
           default:
             statusCode: "200"
@@ -1421,10 +1421,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/gerenciar/pedidos/andamento"
+        uri: "${url_pedido_service}/gerenciar/pedidos/andamento"
         responses:
           default:
             statusCode: "200"
@@ -1434,11 +1434,11 @@ paths:
     get:
       operationId: "get/forma-pagamento/{id}"
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1447,10 +1447,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/forma-pagamento/{id}"
+        uri: "${url_pagamento_service}/forma-pagamento/{id}"
         responses:
           default:
             statusCode: "200"
@@ -1460,11 +1460,11 @@ paths:
         type: "http"
     delete:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1473,10 +1473,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "DELETE"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/forma-pagamento/{id}"
+        uri: "${url_pagamento_service}/forma-pagamento/{id}"
         responses:
           default:
             statusCode: "200"
@@ -1486,11 +1486,11 @@ paths:
         type: "http"
     patch:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1499,10 +1499,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-pagamento-693861571.us-east-1.elb.amazonaws.com/forma-pagamento/{id}"
+        uri: "${url_pagamento_service}/forma-pagamento/{id}"
         responses:
           default:
             statusCode: "200"
@@ -1514,11 +1514,11 @@ paths:
     get:
       operationId: "get/categorias/{id}"
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1527,10 +1527,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/categorias/{id}"
+        uri: "${url_pedido_service}/categorias/{id}"
         responses:
           default:
             statusCode: "200"
@@ -1540,11 +1540,11 @@ paths:
         type: "http"
     delete:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1553,10 +1553,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "DELETE"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/categorias/{id}"
+        uri: "${url_pedido_service}/categorias/{id}"
         responses:
           default:
             statusCode: "200"
@@ -1566,11 +1566,11 @@ paths:
         type: "http"
     patch:
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1579,10 +1579,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/categorias/{id}"
+        uri: "${url_pedido_service}/categorias/{id}"
         responses:
           default:
             statusCode: "200"
@@ -1593,11 +1593,11 @@ paths:
   /pedidos/{idPedido}/cancelar:
     patch:
       parameters:
-      - name: "idPedido"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "idPedido"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1606,10 +1606,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/pedidos/{idPedido}/cancelar"
+        uri: "${url_pedido_service}/pedidos/{idPedido}/cancelar"
         responses:
           default:
             statusCode: "200"
@@ -1620,11 +1620,11 @@ paths:
   /clientes/{cpf}:
     get:
       parameters:
-      - name: "cpf"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "cpf"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1633,10 +1633,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/clientes/{cpf}"
+        uri: "${url_pedido_service}/clientes/{cpf}"
         responses:
           default:
             statusCode: "200"
@@ -1646,11 +1646,11 @@ paths:
         type: "http"
     delete:
       parameters:
-      - name: "cpf"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "cpf"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1659,10 +1659,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "DELETE"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/clientes/{cpf}"
+        uri: "${url_pedido_service}/clientes/{cpf}"
         responses:
           default:
             statusCode: "200"
@@ -1672,11 +1672,11 @@ paths:
         type: "http"
     patch:
       parameters:
-      - name: "cpf"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "cpf"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "200 response"
@@ -1685,10 +1685,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Empty"
       security:
-      - lambda-authorizer: []
+        - lambda-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "PATCH"
-        uri: "http://load-balancer-pedido-1114194348.us-east-1.elb.amazonaws.com/clientes/{cpf}"
+        uri: "${url_pedido_service}/clientes/{cpf}"
         responses:
           default:
             statusCode: "200"
@@ -1698,9 +1698,7 @@ paths:
         type: "http"
 components:
   schemas:
-    Empty:
-      title: "Empty Schema"
-      type: "object"
+
   securitySchemes:
     lambda-authorizer:
       type: "apiKey"
@@ -1708,8 +1706,8 @@ components:
       in: "header"
       x-amazon-apigateway-authtype: "custom"
       x-amazon-apigateway-authorizer:
-        authorizerUri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:730335661438:function:lambda_authorizer/invocations"
-        authorizerCredentials: "arn:aws:iam::730335661438:role/LabRole"
+        authorizerUri: "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${lambda_authorizer_arn}/invocations"
+        authorizerCredentials: "${authorizer_credentials}"
         authorizerResultTtlInSeconds: 300
         identitySource: "method.request.header.Authorization"
         type: "request"
