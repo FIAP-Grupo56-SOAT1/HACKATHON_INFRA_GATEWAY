@@ -56,6 +56,38 @@ paths:
         passthroughBehavior: "when_no_match"
         type: "http"
   /users:
+    get:
+      tags:
+        - Usuários
+      summary: Listar usuários
+      description: Lista todos os usuários
+      operationId: list
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "${url_timesheet_service}/users"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+
     post:
       tags:
         - Usuários
@@ -276,6 +308,37 @@ paths:
         type: "http"
 
   /employees:
+    get:
+      tags:
+        - Funcionários
+      summary: Listar funcionários
+      description: Lista todos os funcionários
+      operationId: list_2
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeResponse'
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "${url_timesheet_service}/employees"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        type: "http"
     post:
       tags:
         - employee-controller
@@ -715,6 +778,7 @@ paths:
         requestParameters:
           integration.request.header.Authorization: "method.request.header.Authorization"
         type: "http"
+
 
 components:
   schemas:
