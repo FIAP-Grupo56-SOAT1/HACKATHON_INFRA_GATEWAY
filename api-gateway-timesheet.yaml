@@ -21,6 +21,11 @@ paths:
       description: Atualiza a senha de um usuário
       operationId: updatePassword
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: userId
           in: path
           required: true
@@ -46,6 +51,7 @@ paths:
           default:
             statusCode: "200"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.userId: "method.request.path.userId"
         passthroughBehavior: "when_no_match"
         type: "http"
@@ -56,6 +62,12 @@ paths:
       summary: Criar usuário
       description: Cria um usuário para o funcionário
       operationId: create
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         content:
           application/json:
@@ -72,6 +84,8 @@ paths:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
         uri: "${url_timesheet_service}/users"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
         responses:
           default:
             statusCode: "200"
@@ -86,6 +100,11 @@ paths:
       description: Deixa o usuario como ativo ou inativo um usuário
       operationId: activateOrDeactivate
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: userId
           in: path
           required: true
@@ -107,6 +126,7 @@ paths:
           default:
             statusCode: "200"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.userId: "method.request.path.userId"
         passthroughBehavior: "when_no_match"
         type: "http"
@@ -119,6 +139,11 @@ paths:
       description: Gera o relatório espelho de ponto de um funcionário
       operationId: generateDotMirrorReport
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
@@ -139,6 +164,7 @@ paths:
           default:
             statusCode: "200"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
         passthroughBehavior: "when_no_match"
         type: "http"
@@ -151,6 +177,11 @@ paths:
       description: Gera o relatório espelho de ponto e envia por e-mail para o funcionário
       operationId: generateAndSendByEmail
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
@@ -167,6 +198,7 @@ paths:
           default:
             statusCode: "200"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
         passthroughBehavior: "when_no_match"
         type: "http"
@@ -178,6 +210,12 @@ paths:
       summary: Registrar ponto manual
       description: Registra o ponto do funcionário manualmente
       operationId: manualRecordPoint
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         content:
           application/json:
@@ -194,6 +232,8 @@ paths:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
         uri: "${url_timesheet_service}/point-records/manual-record-point"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
         responses:
           default:
             statusCode: "200"
@@ -205,6 +245,12 @@ paths:
       tags:
         - autentication-controller
       operationId: login
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         content:
           application/json:
@@ -221,6 +267,8 @@ paths:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
         uri: "${url_timesheet_service}/login"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
         responses:
           default:
             statusCode: "200"
@@ -234,6 +282,12 @@ paths:
       summary: Criar funcionário
       description: Cria um funcionário
       operationId: create_1
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         content:
           application/json:
@@ -250,6 +304,8 @@ paths:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
         uri: "${url_timesheet_service}/employees"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
         responses:
           default:
             statusCode: "200"
@@ -264,6 +320,11 @@ paths:
       description: Retorna um usuário
       operationId: findById
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: userId
           in: path
           required: true
@@ -280,6 +341,7 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/users/{userId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.userId: "method.request.path.userId"
         responses:
           default:
@@ -294,6 +356,11 @@ paths:
       description: Deleta um usuário
       operationId: delete
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: userId
           in: path
           required: true
@@ -306,6 +373,7 @@ paths:
         httpMethod: "DELETE"
         uri: "${url_timesheet_service}/users/{userId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.userId: "method.request.path.userId"
         responses:
           default:
@@ -320,6 +388,12 @@ paths:
       summary: Listar pontos
       description: Retorna todos pontos
       operationId: list
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       responses:
         '200':
           description: OK
@@ -330,6 +404,8 @@ paths:
       x-amazon-apigateway-integration:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/point-records"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
         responses:
           default:
             statusCode: "200"
@@ -344,6 +420,11 @@ paths:
       description: Retorna um ponto
       operationId: findById_1
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: pointRecordId
           in: path
           required: true
@@ -361,6 +442,7 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/point-records/{pointRecordId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.pointRecordId: "method.request.path.pointRecordId"
         responses:
           default:
@@ -376,6 +458,11 @@ paths:
       description: Retorna todos pontos de um funcionário
       operationId: listByEmployeeId
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
@@ -393,6 +480,7 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/point-records/list/{employeeId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
         responses:
           default:
@@ -409,6 +497,11 @@ paths:
       description: Retorna todos pontos de um funcionário por data
       operationId: listByDateAndEmployeeId
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
@@ -432,6 +525,7 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/point-records/list-by-date/employees/{employeeId}/{date}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
           integration.request.path.date: "method.request.path.date"
         responses:
@@ -448,6 +542,11 @@ paths:
       description: Retorna todos pontos por data
       operationId: listByDate
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: date
           in: path
           required: true
@@ -465,6 +564,7 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/point-records/list-by-date/{date}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.date: "method.request.path.date"
         responses:
           default:
@@ -480,6 +580,11 @@ paths:
       description: Consulta um funcionário
       operationId: findById_2
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
@@ -497,6 +602,7 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/employees/{employeeId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
         responses:
           default:
@@ -511,6 +617,11 @@ paths:
       description: Deleta um funcionário
       operationId: delete_1
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
@@ -524,6 +635,7 @@ paths:
         httpMethod: "DELETE"
         uri: "${url_timesheet_service}/employees/{employeeId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
         responses:
           default:
@@ -539,6 +651,11 @@ paths:
       description: Registra o ponto do funcionário
       operationId: recordPoint
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: type
           in: path
           required: true
@@ -558,6 +675,7 @@ paths:
         httpMethod: "POST"
         uri: "${url_timesheet_service}/point-records/employees/record-point/{type}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.type: "method.request.path.type"
         responses:
           default:
@@ -572,6 +690,12 @@ paths:
       summary: Listar todos os pontos
       description: Retorna todos os pontos
       operationId: listFull
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       responses:
         '200':
           description: OK
@@ -588,6 +712,8 @@ paths:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
         type: "http"
 
 components:
