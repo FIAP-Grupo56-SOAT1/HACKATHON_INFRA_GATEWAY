@@ -1,10 +1,10 @@
 openapi: 3.0.1
 info:
   title: OpenAPI definition
-  version: v0
+  version: v1
 servers:
   - url: http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com
-    description: Generated server url
+    description: Timesheet
 tags:
   - name: Usuários
     description: Controller que gerencia as ações possíveis de um usuário
@@ -21,6 +21,11 @@ paths:
       description: Atualiza a senha de um usuário
       operationId: updatePassword
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: userId
           in: path
           required: true
@@ -46,17 +51,55 @@ paths:
           default:
             statusCode: "200"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.userId: "method.request.path.userId"
         passthroughBehavior: "when_no_match"
         type: "http"
-
   /users:
+    get:
+      tags:
+        - Usuários
+      summary: Listar usuários
+      description: Lista todos os usuários
+      operationId: list
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "${url_timesheet_service}/users"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+
     post:
       tags:
         - Usuários
       summary: Criar usuário
       description: Cria um usuário para o funcionário
       operationId: create
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         content:
           application/json:
@@ -73,6 +116,8 @@ paths:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
         uri: "${url_timesheet_service}/users"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
         responses:
           default:
             statusCode: "200"
@@ -87,6 +132,11 @@ paths:
       description: Deixa o usuario como ativo ou inativo um usuário
       operationId: activateOrDeactivate
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: userId
           in: path
           required: true
@@ -108,8 +158,10 @@ paths:
           default:
             statusCode: "200"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.userId: "method.request.path.userId"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
   /reports/generate/{employeeId}/dot-mirror:
     post:
@@ -119,6 +171,11 @@ paths:
       description: Gera o relatório espelho de ponto de um funcionário
       operationId: generateDotMirrorReport
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
@@ -126,8 +183,12 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
-          description: OK
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultDotMirrorReportResponse"
       x-amazon-apigateway-integration:
         httpMethod: "POST"
         uri: "${url_timesheet_service}/reports/generate/{employeeId}/dot-mirror"
@@ -135,89 +196,44 @@ paths:
           default:
             statusCode: "200"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
-  /reports/generate/{employeeId}/dot-mirror/{year}/{month}:
+  /reports/generate/dot-mirror/send-mail/{employeeId}:
     post:
       tags:
         - Relatórios
-      summary: Gerar relatório espelho de ponto para um mês e ano especifico
-      description: 'Gera o relatório espelho de ponto de um mês e ano especifico de um funcionário '
-      operationId: generateDotMirrorReport_1
+      summary: Envia o relatório espelho de ponto por e-mail
+      description: Gera o relatório espelho de ponto e envia por e-mail para o funcionário
+      operationId: generateAndSendByEmail
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
           schema:
             type: integer
             format: int64
-        - name: month
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: year
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
       responses:
         '200':
           description: OK
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "${url_timesheet_service}/reports/generate/{employeeId}/dot-mirror/{year}/{month}"
+        uri: "${url_timesheet_service}/reports/generate/dot-mirror/send-mail/{employeeId}"
         responses:
           default:
             statusCode: "200"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
-          integration.request.path.month: "method.request.path.month"
-          integration.request.path.year: "method.request.path.year"
         passthroughBehavior: "when_no_match"
-
-  /point-records/employees/{employeeId}/record-point/{type}:
-    post:
-      tags:
-        - Registro de Ponto
-      summary: Registrar ponto
-      description: Registra o ponto do funcionário
-      operationId: recordPoint
-      parameters:
-        - name: employeeId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: type
-          in: path
-          required: true
-          schema:
-            type: string
-            enum:
-              - IN
-              - OUT
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PointRecordResponse'
-      x-amazon-apigateway-integration:
-        httpMethod: "POST"
-        uri: "${url_timesheet_service}/point-records/employees/{employeeId}/record-point/{type}"
-        responses:
-          default:
-            statusCode: "200"
-        requestParameters:
-          integration.request.path.employeeId: "method.request.path.employeeId"
-          integration.request.path.type: "method.request.path.type"
-        passthroughBehavior: "when_no_match"
+        type: "http"
 
   /point-records/manual-record-point:
     post:
@@ -226,6 +242,12 @@ paths:
       summary: Registrar ponto manual
       description: Registra o ponto do funcionário manualmente
       operationId: manualRecordPoint
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         content:
           application/json:
@@ -242,16 +264,25 @@ paths:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
         uri: "${url_timesheet_service}/point-records/manual-record-point"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
   /login:
     post:
       tags:
         - autentication-controller
       operationId: login
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         content:
           application/json:
@@ -268,18 +299,58 @@ paths:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
         uri: "${url_timesheet_service}/login"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
   /employees:
+    get:
+      tags:
+        - Funcionários
+      summary: Listar funcionários
+      description: Lista todos os funcionários
+      operationId: list_2
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeResponse'
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "${url_timesheet_service}/employees"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        type: "http"
     post:
       tags:
         - employee-controller
       summary: Criar funcionário
       description: Cria um funcionário
       operationId: create_1
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         content:
           application/json:
@@ -296,10 +367,13 @@ paths:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
         uri: "${url_timesheet_service}/employees"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
   /users/{userId}:
     get:
@@ -309,6 +383,11 @@ paths:
       description: Retorna um usuário
       operationId: findById
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: userId
           in: path
           required: true
@@ -325,11 +404,13 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/users/{userId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.userId: "method.request.path.userId"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
     delete:
       tags:
@@ -338,6 +419,11 @@ paths:
       description: Deleta um usuário
       operationId: delete
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: userId
           in: path
           required: true
@@ -350,11 +436,13 @@ paths:
         httpMethod: "DELETE"
         uri: "${url_timesheet_service}/users/{userId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.userId: "method.request.path.userId"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
   /point-records:
     get:
@@ -363,6 +451,12 @@ paths:
       summary: Listar pontos
       description: Retorna todos pontos
       operationId: list
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       responses:
         '200':
           description: OK
@@ -373,10 +467,13 @@ paths:
       x-amazon-apigateway-integration:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/point-records"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
   /point-records/{pointRecordId}:
     get:
@@ -386,6 +483,11 @@ paths:
       description: Retorna um ponto
       operationId: findById_1
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: pointRecordId
           in: path
           required: true
@@ -403,11 +505,13 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/point-records/{pointRecordId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.pointRecordId: "method.request.path.pointRecordId"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
   /point-records/list/{employeeId}:
     get:
@@ -417,6 +521,11 @@ paths:
       description: Retorna todos pontos de um funcionário
       operationId: listByEmployeeId
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
@@ -434,11 +543,13 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/point-records/list/{employeeId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
   #/point-records/list-by-date/{employeeId}/{date}:
   /point-records/list-by-date/employees/{employeeId}/{date}:
@@ -449,6 +560,11 @@ paths:
       description: Retorna todos pontos de um funcionário por data
       operationId: listByDateAndEmployeeId
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
@@ -472,12 +588,14 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/point-records/list-by-date/employees/{employeeId}/{date}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
           integration.request.path.date: "method.request.path.date"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
   /point-records/list-by-date/{date}:
     get:
@@ -487,6 +605,11 @@ paths:
       description: Retorna todos pontos por data
       operationId: listByDate
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: date
           in: path
           required: true
@@ -504,11 +627,13 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/point-records/list-by-date/{date}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.date: "method.request.path.date"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
   /employees/{employeeId}:
     get:
@@ -518,6 +643,11 @@ paths:
       description: Consulta um funcionário
       operationId: findById_2
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
@@ -535,11 +665,13 @@ paths:
         httpMethod: "GET"
         uri: "${url_timesheet_service}/employees/{employeeId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
 
     delete:
       tags:
@@ -548,6 +680,11 @@ paths:
       description: Deleta um funcionário
       operationId: delete_1
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
         - name: employeeId
           in: path
           required: true
@@ -561,11 +698,87 @@ paths:
         httpMethod: "DELETE"
         uri: "${url_timesheet_service}/employees/{employeeId}"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.path.employeeId: "method.request.path.employeeId"
         responses:
           default:
             statusCode: "200"
         passthroughBehavior: "when_no_match"
+        type: "http"
+
+  /point-records/employees/record-point/{type}:
+    post:
+      tags:
+        - Registro de Ponto
+      summary: Registrar ponto
+      description: Registra o ponto do funcionário
+      operationId: recordPoint
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - IN
+              - OUT
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PointRecordResponse'
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "${url_timesheet_service}/point-records/employees/record-point/{type}"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.type: "method.request.path.type"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+
+  /point-records/list-full:
+    get:
+      tags:
+        - Registro de Ponto
+      summary: Listar todos os pontos
+      description: Retorna todos os pontos
+      operationId: listFull
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PointRecordResponse'
+      x-amazon-apigateway-integration:
+        httpMethod: "GET"
+        uri: "${url_timesheet_service}/point-records/list-full"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        type: "http"
+
 
 components:
   schemas:
@@ -607,6 +820,26 @@ components:
       properties:
         active:
           type: boolean
+    DefaultDotMirrorReportResponse:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        month:
+          type: integer
+          format: int32
+        year:
+          type: integer
+          format: int32
+        pointRecords:
+          type: array
+          items:
+            $ref: '#/components/schemas/PointRecordReportDataResponse'
+        totalWorkedTime:
+          $ref: '#/components/schemas/LocalTime'
     LocalTime:
       type: object
       properties:
@@ -622,7 +855,25 @@ components:
         nano:
           type: integer
           format: int32
-    PointRecordResponse:
+    PointRecordReportDataResponse:
+      type: object
+      properties:
+        pointRecordId:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date
+        time:
+          $ref: '#/components/schemas/LocalTime'
+        type:
+          type: string
+          enum:
+            - IN
+            - OUT
+        valid:
+          type: boolean
+    PointRecordRequest:
       type: object
       properties:
         pointRecordId:
@@ -641,7 +892,7 @@ components:
           enum:
             - IN
             - OUT
-    PointRecordRequest:
+    PointRecordResponse:
       type: object
       properties:
         pointRecordId:

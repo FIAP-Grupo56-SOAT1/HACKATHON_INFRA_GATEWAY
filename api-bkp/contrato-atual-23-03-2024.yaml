@@ -1,0 +1,586 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com
+    description: Generated server url
+tags:
+  - name: Funcionários
+    description: Controller que gerencia as ações possíveis de um funcionário
+  - name: Usuários
+    description: Controller que gerencia as ações possíveis de um usuário
+  - name: Autenticação
+    description: Controller que gerencia a autenticação
+  - name: Relatórios
+    description: Controller que gerencia a emisão de relatório
+  - name: Registro de Ponto
+    description: Controller que gerencia as ações possíveis de um ponto de um funcionário
+paths:
+  /users/{userId}/change-password:
+    put:
+      tags:
+        - Usuários
+      summary: Atualizar senha
+      description: Atualiza a senha de um usuário
+      operationId: updatePassword
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordUpdRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+  /users:
+    post:
+      tags:
+        - Usuários
+      summary: Criar usuário
+      description: Cria um usuário para o funcionário
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+  /users/{userId}/activation:
+    post:
+      tags:
+        - Usuários
+      summary: Ativar ou desativar usuário
+      description: Deixa o usuario como ativo ou inativo um usuário
+      operationId: activateOrDeactivate
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserActivationRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+  /reports/generate/{employeeId}/dot-mirror:
+    post:
+      tags:
+        - Relatórios
+      summary: Gerar relatório espelho de ponto
+      description: Gera o relatório espelho de ponto de um funcionário
+      operationId: generateDotMirrorReport
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DefaultDotMirrorReportResponse'
+  /reports/generate/dot-mirror/send-mail/{employeeId}:
+    post:
+      tags:
+        - Relatórios
+      summary: Envia o relatório espelho de ponto por e-mail
+      description: Gera o relatório espelho de ponto e envia por e-mail para o funcionário
+      operationId: generateAndSendByEmail
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+  /point-records/manual-record-point:
+    post:
+      tags:
+        - Registro de Ponto
+      summary: Registrar ponto manual
+      description: Registra o ponto do funcionário manualmente
+      operationId: manualRecordPoint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PointRecordRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PointRecordResponse'
+  /point-records/employees/record-point/{type}:
+    post:
+      tags:
+        - Registro de Ponto
+      summary: Registrar ponto
+      description: Registra o ponto do funcionário
+      operationId: recordPoint
+      parameters:
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - IN
+              - OUT
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PointRecordResponse'
+  /login:
+    post:
+      tags:
+        - Autenticação
+      summary: Login
+      description: Realiza o login do usuário
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationDataRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DataTokenJWTReponse'
+  /employees:
+    post:
+      tags:
+        - Funcionários
+      summary: Criar funcionário
+      description: Cria um funcionário
+      operationId: create_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EmployeeResponse'
+  /users/{userId}:
+    get:
+      tags:
+        - Usuários
+      summary: Consultar usuário
+      description: Retorna um usuário
+      operationId: findById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+    delete:
+      tags:
+        - Usuários
+      summary: Deletar usuário
+      description: Deleta um usuário
+      operationId: delete
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /point-records:
+    get:
+      tags:
+        - Registro de Ponto
+      summary: Listar pontos
+      description: Retorna todos pontos
+      operationId: list
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PointRecordTotalResponse'
+  /point-records/{pointRecordId}:
+    get:
+      tags:
+        - Registro de Ponto
+      summary: Consultar ponto
+      description: Retorna um ponto
+      operationId: findById_1
+      parameters:
+        - name: pointRecordId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PointRecordResponse'
+  /point-records/list/{employeeId}:
+    get:
+      tags:
+        - Registro de Ponto
+      summary: Listar pontos por funcionário
+      description: Retorna todos pontos de um funcionário
+      operationId: listByEmployeeId
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PointRecordTotalResponse'
+  /point-records/list-full:
+    get:
+      tags:
+        - Registro de Ponto
+      summary: Listar todos os pontos
+      description: Retorna todos os pontos
+      operationId: listFull
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PointRecordResponse'
+  /point-records/list-by-date/{date}:
+    get:
+      tags:
+        - Registro de Ponto
+      summary: Listar pontos por data
+      description: Retorna todos pontos por data
+      operationId: listByDate
+      parameters:
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PointRecordTotalResponse'
+  /point-records/list-by-date/employees/{employeeId}/{date}:
+    get:
+      tags:
+        - Registro de Ponto
+      summary: Listar pontos de funcionário por data
+      description: Retorna todos pontos de um funcionário por data
+      operationId: listByDateAndEmployeeId
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PointRecordTotalResponse'
+  /employees/{employeeId}:
+    get:
+      tags:
+        - Funcionários
+      summary: Consultar funcionário
+      description: Consulta um funcionário
+      operationId: findById_2
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EmployeeResponse'
+    delete:
+      tags:
+        - Funcionários
+      summary: Deletar funcionário
+      description: Deleta um funcionário
+      operationId: delete_1
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    PasswordUpdRequest:
+      required:
+        - password
+      type: object
+      properties:
+        password:
+          type: string
+    UserResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+        employeeId:
+          type: integer
+          format: int64
+        active:
+          type: boolean
+    UserRequest:
+      required:
+        - employeeId
+        - password
+        - userId
+      type: object
+      properties:
+        userId:
+          type: string
+        password:
+          type: string
+        employeeId:
+          type: integer
+          format: int64
+    UserActivationRequest:
+      required:
+        - active
+      type: object
+      properties:
+        active:
+          type: boolean
+    DefaultDotMirrorReportResponse:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        month:
+          type: integer
+          format: int32
+        year:
+          type: integer
+          format: int32
+        pointRecords:
+          type: array
+          items:
+            $ref: '#/components/schemas/PointRecordReportDataResponse'
+        totalWorkedTime:
+          $ref: '#/components/schemas/LocalTime'
+    LocalTime:
+      type: object
+      properties:
+        hour:
+          type: integer
+          format: int32
+        minute:
+          type: integer
+          format: int32
+        second:
+          type: integer
+          format: int32
+        nano:
+          type: integer
+          format: int32
+    PointRecordReportDataResponse:
+      type: object
+      properties:
+        pointRecordId:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date
+        time:
+          $ref: '#/components/schemas/LocalTime'
+        type:
+          type: string
+          enum:
+            - IN
+            - OUT
+        valid:
+          type: boolean
+    PointRecordRequest:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date
+        time:
+          $ref: '#/components/schemas/LocalTime'
+        type:
+          type: string
+          enum:
+            - IN
+            - OUT
+    PointRecordResponse:
+      type: object
+      properties:
+        pointRecordId:
+          type: integer
+          format: int64
+        employeeId:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date
+        time:
+          $ref: '#/components/schemas/LocalTime'
+        type:
+          type: string
+          enum:
+            - IN
+            - OUT
+    AuthenticationDataRequest:
+      type: object
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+    DataTokenJWTReponse:
+      type: object
+      properties:
+        token:
+          type: string
+    EmployeeRequest:
+      required:
+        - email
+        - name
+        - role
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+            - SELLER
+            - BUYER
+            - TECHNICIAN
+            - MANAGER
+    EmployeeResponse:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+            - SELLER
+            - BUYER
+            - TECHNICIAN
+            - MANAGER
+        active:
+          type: boolean
+    PointRecordTotalResponse:
+      type: object
+      properties:
+        pointRecordResponseList:
+          type: array
+          items:
+            $ref: '#/components/schemas/PointRecordResponse'
+        totalWorkedHours:
+          $ref: '#/components/schemas/LocalTime'
