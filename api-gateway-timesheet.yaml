@@ -78,7 +78,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/UserResponse'
       x-amazon-apigateway-integration:
-        httpMethod: "POST"
+        httpMethod: "GET"
         uri: "${url_timesheet_service}/users"
         requestParameters:
           integration.request.header.Authorization: "method.request.header.Authorization"
@@ -330,7 +330,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/EmployeeResponse'
       x-amazon-apigateway-integration:
-        httpMethod: "POST"
+        httpMethod: "GET"
         uri: "${url_timesheet_service}/employees"
         requestParameters:
           integration.request.header.Authorization: "method.request.header.Authorization"
