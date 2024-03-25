@@ -1,0 +1,939 @@
+openapi: "3.0.1"
+info:
+  title: "timesheet"
+  description: "API Gateway para projeto timesheet"
+  version: "v1"
+servers:
+- url: "https://55dkdj1f2e.execute-api.us-east-1.amazonaws.com/{basePath}"
+  variables:
+    basePath:
+      default: "prod"
+paths:
+  /point-records/list-full:
+    get:
+      operationId: "listFull"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfPointRecordResponse"
+        "403":
+          description: "403 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: "GET"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/point-records/list-full"
+        responses:
+          default:
+            statusCode: "200"
+          "403":
+            statusCode: "403"
+            contentHandling: "CONVERT_TO_TEXT"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /users:
+    get:
+      operationId: "list"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfUserResponse"
+      x-amazon-apigateway-integration:
+        httpMethod: "GET"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/users"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+    post:
+      operationId: "create"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+        required: true
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/users"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /employees:
+    get:
+      operationId: "list_2"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfEmployeeResponse"
+        "403":
+          description: "403 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: "GET"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/employees"
+        responses:
+          default:
+            statusCode: "200"
+          "403":
+            statusCode: "403"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+    post:
+      operationId: "create_1"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeRequest"
+        required: true
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeResponse"
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/employees"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /login:
+    post:
+      operationId: "login"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DadosAutenticacao"
+        required: true
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/login"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /point-records/list-by-date/employees/{employeeId}/{date}:
+    get:
+      operationId: "listByDateAndEmployeeId"
+      parameters:
+      - name: "date"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "employeeId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PointRecordTotalResponse"
+        "403":
+          description: "403 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: "GET"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/point-records/list-by-date/employees/{employeeId}/{date}"
+        responses:
+          default:
+            statusCode: "200"
+          "403":
+            statusCode: "403"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.date: "method.request.path.date"
+          integration.request.path.employeeId: "method.request.path.employeeId"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /employees/{employeeId}:
+    get:
+      operationId: "findById_2"
+      parameters:
+      - name: "employeeId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeResponse"
+        "403":
+          description: "403 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: "GET"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/employees/{employeeId}"
+        responses:
+          default:
+            statusCode: "200"
+          "403":
+            statusCode: "403"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.employeeId: "method.request.path.employeeId"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+    delete:
+      operationId: "delete_1"
+      parameters:
+      - name: "employeeId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content: {}
+        "403":
+          description: "403 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: "DELETE"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/employees/{employeeId}"
+        responses:
+          default:
+            statusCode: "200"
+          "403":
+            statusCode: "403"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.employeeId: "method.request.path.employeeId"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /point-records/{pointRecordId}:
+    get:
+      operationId: "findById_1"
+      parameters:
+      - name: "pointRecordId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PointRecordResponse"
+        "403":
+          description: "403 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: "GET"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/point-records/{pointRecordId}"
+        responses:
+          default:
+            statusCode: "200"
+          "403":
+            statusCode: "403"
+        requestParameters:
+          integration.request.path.pointRecordId: "method.request.path.pointRecordId"
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /point-records/list/{employeeId}:
+    get:
+      operationId: "listByEmployeeId"
+      parameters:
+      - name: "employeeId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PointRecordTotalResponse"
+        "403":
+          description: "403 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: "GET"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/point-records/list/{employeeId}"
+        responses:
+          default:
+            statusCode: "200"
+          "403":
+            statusCode: "403"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.employeeId: "method.request.path.employeeId"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /point-records/manual-record-point:
+    post:
+      operationId: "manualRecordPoint"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PointRecordRequest"
+        required: true
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PointRecordResponse"
+        "403":
+          description: "403 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/point-records/manual-record-point"
+        responses:
+          default:
+            statusCode: "200"
+          "403":
+            statusCode: "403"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /users/{userId}/change-password:
+    put:
+      operationId: "updatePassword"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordUpdRequest"
+        required: true
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+      x-amazon-apigateway-integration:
+        httpMethod: "PUT"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/users/{userId}/change-password"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.userId: "method.request.path.userId"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /users/{userId}/activation:
+    post:
+      operationId: "activateOrDeactivate"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserActivationRequest"
+        required: true
+      responses:
+        "200":
+          description: "200 response"
+          content: {}
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/users/{userId}/activation"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.userId: "method.request.path.userId"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /point-records/employees/record-point/{type}:
+    post:
+      operationId: "recordPoint"
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PointRecordResponse"
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/point-records/employees/record-point/{type}"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.path.type: "method.request.path.type"
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /reports/generate/{employeeId}/dot-mirror:
+    post:
+      operationId: "generateDotMirrorReport"
+      parameters:
+      - name: "employeeId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultDotMirrorReportResponse"
+        "403":
+          description: "403 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/reports/generate/{employeeId}/dot-mirror"
+        responses:
+          default:
+            statusCode: "200"
+          "403":
+            statusCode: "403"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.employeeId: "method.request.path.employeeId"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /reports/generate/dot-mirror/send-mail/{employeeId}:
+    post:
+      operationId: "generateAndSendByEmail"
+      parameters:
+      - name: "employeeId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content: {}
+        "403":
+          description: "403 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/reports/generate/dot-mirror/send-mail/{employeeId}"
+        responses:
+          default:
+            statusCode: "200"
+          "403":
+            statusCode: "403"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.employeeId: "method.request.path.employeeId"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /point-records/list-by-date/{date}:
+    get:
+      operationId: "listByDate"
+      parameters:
+      - name: "date"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PointRecordTotalResponse"
+      x-amazon-apigateway-integration:
+        httpMethod: "GET"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/point-records/list-by-date/{date}"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.date: "method.request.path.date"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /users/{userId}:
+    get:
+      operationId: "findById"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+      x-amazon-apigateway-integration:
+        httpMethod: "GET"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/users/{userId}"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.userId: "method.request.path.userId"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+    delete:
+      operationId: "delete"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content: {}
+      x-amazon-apigateway-integration:
+        httpMethod: "DELETE"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/users/{userId}"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.path.userId: "method.request.path.userId"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+  /point-records:
+    get:
+      operationId: "list"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PointRecordTotalResponse"
+      x-amazon-apigateway-integration:
+        httpMethod: "GET"
+        uri: "http://load-balancer-timesheet-595005313.us-east-1.elb.amazonaws.com/point-records"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+        passthroughBehavior: "when_no_match"
+        type: "http"
+components:
+  schemas:
+    ArrayOfPointRecordResponse:
+      type: "array"
+      items:
+        $ref: "#/components/schemas/PointRecordResponse"
+    LocalTime:
+      type: "object"
+      properties:
+        hour:
+          type: "integer"
+          format: "int32"
+        minute:
+          type: "integer"
+          format: "int32"
+        second:
+          type: "integer"
+          format: "int32"
+        nano:
+          type: "integer"
+          format: "int32"
+    ArrayOfUserResponse:
+      type: "array"
+      items:
+        $ref: "#/components/schemas/UserResponse"
+    PointRecordRequest:
+      type: "object"
+      properties:
+        pointRecordId:
+          type: "integer"
+          format: "int64"
+        employeeId:
+          type: "integer"
+          format: "int64"
+        date:
+          type: "string"
+          format: "date"
+        time:
+          $ref: "#/components/schemas/LocalTime"
+        type:
+          type: "string"
+          enum:
+          - "IN"
+          - "OUT"
+    DadosAutenticacao:
+      type: "object"
+      properties:
+        login:
+          type: "string"
+        senha:
+          type: "string"
+    UserActivationRequest:
+      required:
+      - "active"
+      type: "object"
+      properties:
+        active:
+          type: "boolean"
+    PointRecordReportDataResponse:
+      type: "object"
+      properties:
+        pointRecordId:
+          type: "integer"
+          format: "int64"
+        date:
+          type: "string"
+          format: "date"
+        time:
+          $ref: "#/components/schemas/LocalTime"
+        type:
+          type: "string"
+          enum:
+          - "IN"
+          - "OUT"
+        valid:
+          type: "boolean"
+    UserResponse:
+      type: "object"
+      properties:
+        userId:
+          type: "string"
+        employeeId:
+          type: "integer"
+          format: "int64"
+        active:
+          type: "boolean"
+    Empty:
+      title: "Empty Schema"
+      type: "object"
+    DefaultDotMirrorReportResponse:
+      type: "object"
+      properties:
+        employeeId:
+          type: "integer"
+          format: "int64"
+        employeeName:
+          type: "string"
+        month:
+          type: "integer"
+          format: "int32"
+        year:
+          type: "integer"
+          format: "int32"
+        pointRecords:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PointRecordReportDataResponse"
+        totalWorkedTime:
+          $ref: "#/components/schemas/LocalTime"
+    EmployeeRequest:
+      required:
+      - "email"
+      - "name"
+      - "role"
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        email:
+          type: "string"
+        role:
+          type: "string"
+          enum:
+          - "SELLER"
+          - "BUYER"
+          - "TECHNICIAN"
+    PasswordUpdRequest:
+      required:
+      - "password"
+      type: "object"
+      properties:
+        password:
+          type: "string"
+    ArrayOfEmployeeResponse:
+      type: "array"
+      items:
+        $ref: "#/components/schemas/EmployeeResponse"
+    EmployeeResponse:
+      type: "object"
+      properties:
+        employeeId:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        email:
+          type: "string"
+        role:
+          type: "string"
+          enum:
+          - "SELLER"
+          - "BUYER"
+          - "TECHNICIAN"
+        active:
+          type: "boolean"
+    PointRecordResponse:
+      type: "object"
+      properties:
+        pointRecordId:
+          type: "integer"
+          format: "int64"
+        employeeId:
+          type: "integer"
+          format: "int64"
+        date:
+          type: "string"
+          format: "date"
+        time:
+          $ref: "#/components/schemas/LocalTime"
+        type:
+          type: "string"
+          enum:
+          - "IN"
+          - "OUT"
+    PointRecordTotalResponse:
+      type: "object"
+      properties:
+        pointRecordResponseList:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PointRecordResponse"
+        totalWorkedHours:
+          $ref: "#/components/schemas/LocalTime"
+    UserRequest:
+      required:
+      - "employeeId"
+      - "password"
+      - "userId"
+      type: "object"
+      properties:
+        userId:
+          type: "string"
+        password:
+          type: "string"
+        employeeId:
+          type: "integer"
+          format: "int64"
